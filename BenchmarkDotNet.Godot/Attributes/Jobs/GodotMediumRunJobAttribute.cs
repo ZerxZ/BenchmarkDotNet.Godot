@@ -4,9 +4,15 @@ using BenchmarkDotNet.Godot.Extensions;
 using BenchmarkDotNet.Jobs;
 
 namespace BenchmarkDotNet.Godot.Attributes.Jobs;
+/// <summary>
+/// This attribute is used to define a new MediumRun Job that targets specified Framework, JIT and Platform
+/// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = true)]
 public class GodotMediumRunJobAttribute : MediumRunJobAttribute
 {
+    /// <summary>
+    /// This attribute is used to define a new MediumRun Job that targets specified Framework, JIT and Platform
+    /// </summary>
     public GodotMediumRunJobAttribute() : base()
     {
         this.ChangeConfigToInProcessEmitToolchain();

@@ -9,14 +9,33 @@
         <Authors>Zerxz</Authors>
         <Description>BenchmarkDotNet.Godot allows developers to easily conduct performance testing and benchmarking within the Godot engine, enabling them to assess the efficiency of their code and identify potential performance bottlenecks.</Description>
         <RepositoryUrl>https://github.com/ZerxZ/BenchmarkDotNet.Godot</RepositoryUrl>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Copyright>MIT</Copyright>
+        <RepositoryType>Git</RepositoryType>
+        <AssemblyVersion>0.0.1</AssemblyVersion>
+        <FileVersion>0.0.1</FileVersion>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PackageId>BenchmarkDotNetGodot</PackageId>
+        <PackageTags>benchmark performance godot</PackageTags>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DocumentationFile>bin\Release\BenchmarkDotNet.Godot.xml</DocumentationFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="..\LICENSE" Pack="true" PackagePath=""/>
+        <None Include="..\README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
     <ItemGroup>
       <Folder Include="Configs\" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
+      <PackageReference Include="BenchmarkDotNet.Annotations" Version="0.13.12" />
     </ItemGroup>
 
 </Project>
