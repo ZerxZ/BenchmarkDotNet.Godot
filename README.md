@@ -2,7 +2,7 @@
 
 BenchmarkDotNet.Godot allows developers to easily conduct performance testing and benchmarking within the Godot engine, enabling them to assess the efficiency of their code and identify potential performance bottlenecks.
 
-# Dependency
+# Dependencies
 
 [GDTask.Nuget](https://github.com/Delsin-Yu/GDTask.Nuget)
 
@@ -14,12 +14,25 @@ For .Net CLI
 
 ```
 dotnet add package BenchmarkDotNetGodot
+dotnet add package BenchmarkDotNet
+dotnet add package GDTask
 ```
 
 For Package Manager Console:
 
 ```
 NuGet\Install-Package BenchmarkDotNetGodot
+NuGet\Install-Package BenchmarkDotNet
+NuGet\Install-Package GDTask
+```
+For Package Reference:
+
+```xml
+<ItemGroup>
+    <PackageReference Include="BenchmarkDotNetGodot" Version="*" />
+    <PackageReference Include="BenchmarkDotNet" Version="*" />
+    <PackageReference Include="GDTask" Version="*" />
+</ItemGroup>
 ```
 
 # Basic API usage
