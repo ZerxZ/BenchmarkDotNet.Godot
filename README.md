@@ -1,14 +1,28 @@
 # BenchmarkDotNet.Godot
+
 BenchmarkDotNet.Godot allows developers to easily conduct performance testing and benchmarking within the Godot engine, enabling them to assess the efficiency of their code and identify potential performance bottlenecks.
 
-# Dependency 
+# Dependency
 
 [GDTask.Nuget](https://github.com/Delsin-Yu/GDTask.Nuget)
 
 [BenchmarkDotNet](https://github.com/dotnet/BenchmarkDotNet)
 
-# Basic API usage
+# Installation via Nuget
 
+For .Net CLI
+
+```
+dotnet add package BenchmarkDotNetGodot
+```
+
+For Package Manager Console:
+
+```
+NuGet\Install-Package BenchmarkDotNetGodot
+```
+
+# Basic API usage
 
 ```csharp
 using Godot;
@@ -71,7 +85,6 @@ public class BenchmarkGodot
     public void _TestNode()
     {
         var root = Root;
-        NodeList ??= new List<Node>();
 
         for (int i = 0; i < 1000; i++)
         {
@@ -95,3 +108,14 @@ public class BenchmarkGodot
     }
 }
 ```
+
+# Api
+
+| BenchmarkDotNet Type | BenchmarkDotNet.Godot Type |
+| -------------------- | -------------------------- |
+| `DryJob`             | `GodotDryJob`              |
+| `SimpleJob`          | `GodotSimpleJob`           |
+| `ShortRunJob`        | `GodotShortRunJob`         |
+| `MediumRunJob`       | `GodotMediumRunJob`        |
+| `LongRunJob`         | `GodotLongRunJob`          |
+| `VeryLongRunJob`     | `GodotVeryLongRunJob`      |
