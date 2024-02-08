@@ -25,6 +25,7 @@ NuGet\Install-Package BenchmarkDotNetGodot
 NuGet\Install-Package BenchmarkDotNet
 NuGet\Install-Package GDTask
 ```
+
 For Package Reference:
 
 ```xml
@@ -51,73 +52,7 @@ public partial class BenchmarkRun : Node
 
     public override async void _Ready()
     {
-        var logger = new AccumulationLogger();
-        await GDTask.RunOnThreadPool(() =>
-        {
-            var config =DefaultConfig.Instance.WithOptions(ConfigOptions.DisableOptimizationsValidator);
-#if DEBUG
-            config = new DebugInProcessConfig().WithOptions(ConfigOptions.DisableOptimizationsValidator);
-#endif
-            var summary = BenchmarkRunner.Run<BenchmarkGodot>(config);
-            BBCodeExporter.Default.ExportToLog(summary, logger);
-            ConclusionHelper.Print(logger,
-                summary.BenchmarksCases
-                    .SelectMany(benchmark => benchmark.Config.GetCompositeAnalyser().Analyse(summary))
-                    .Distinct()
-                    .ToList());
-        });
-        var text = logger.GetLog();
-        GD.PrintRich(text);
-    }
-}
-```
 
-```csharp
-using System;
-using System.Collections.Generic;
-using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Godot.Attributes.Jobs;
-using BenchmarkDotNet.Order;
-using Godot;
-
-
-[Orderer(SummaryOrderPolicy.FastestToSlowest)]
-[MemoryDiagnoser, GodotSimpleJob]
-public class BenchmarkGodot
-{
-    private static Window _root;
-    public static  Window Root => _root ??= ((SceneTree)Engine.GetMainLoop()).Root;
-
-    [Benchmark]
-    public void TestNode()
-    {
-        SyncTest(_TestNode);
-    }
-    public static List<Node> NodeList = new List<Node>();
-
-    public void _TestNode()
-    {
-        var root = Root;
-
-        for (int i = 0; i < 1000; i++)
-        {
-            var node = new Node();
-            NodeList.Add(node);
-            root.AddChild(node);
-        }
-        foreach (var node in NodeList)
-        {
-            node.QueueFree();
-        }
-        NodeList.Clear();
-
-    }
-    public static void SyncTest(Action action)
-    {
-        Dispatcher.SynchronizationContext?.Send(_ =>
-        {
-            action();
-        }, null);
     }
 }
 ```

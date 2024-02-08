@@ -4,7 +4,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <TargetFrameworks>net8.0;net6.0;net7.0</TargetFrameworks>
-        <Version>0.0.2</Version>
+        <Version>0.0.3</Version>
         <Title>BenchmarkDotNet.Godot</Title>
         <Authors>Zerxz</Authors>
         <Description>BenchmarkDotNet.Godot allows developers to easily conduct performance testing and benchmarking within the Godot engine, enabling them to assess the efficiency of their code and identify potential performance bottlenecks.</Description>
@@ -29,13 +29,12 @@
         <None Include="..\LICENSE" Pack="true" PackagePath=""/>
         <None Include="..\README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Configs\" />
-    </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
       <PackageReference Include="BenchmarkDotNet.Annotations" Version="0.13.12" />
+      <PackageReference Include="GodotSharp" Version="4.*" />
+      <PackageReference Include="GodotSharpEditor" Version="4.*" />
     </ItemGroup>
 
 </Project>
