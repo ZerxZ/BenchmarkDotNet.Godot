@@ -12,7 +12,7 @@ namespace BenchmarkDotNet.Godot.Running;
 
 public static partial class GodotBenchmarkRunner
 {
-    public static readonly  bool               DebugMode = OS.IsDebugBuild();
+    public static readonly  bool               EditorMode = OS.HasFeature("editor");
     private static readonly AccumulationLogger Logger    = new AccumulationLogger();
     private static void SetGodotConfig(ref IConfig? config, bool isDebug = false)
     {
@@ -31,7 +31,7 @@ public static partial class GodotBenchmarkRunner
             BBCodeExporter.Default.ExportToLog(summary, logger);
             var log = logger.GetLog();
             onCallback?.Invoke(summary, log);
-            if (DebugMode)
+            if (EditorMode)
             {
                 GD.PrintRich(log);
             }
@@ -45,7 +45,7 @@ public static partial class GodotBenchmarkRunner
         BBCodeExporter.Default.ExportToLog(summary, logger);
         var log = Logger.GetLog();
         onCallback?.Invoke(log);
-        if (DebugMode)
+        if (EditorMode)
         {
             GD.PrintRich(log);
         }

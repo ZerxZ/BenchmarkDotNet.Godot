@@ -94,7 +94,7 @@ public abstract class DebugConfig : IConfig
     /// <returns>The loggers for the configuration.</returns>
     public IEnumerable<ILogger> GetLoggers()
     {
-        if (OS.IsDebugBuild())
+        if (OS.HasFeature("editor"))
         {
             yield return GodotLogger.Default;
         }
