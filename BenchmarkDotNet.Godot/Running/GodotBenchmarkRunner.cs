@@ -12,15 +12,14 @@ namespace BenchmarkDotNet.Godot.Running;
 
 public static partial class GodotBenchmarkRunner
 {
-    public static bool EditorMode = true;
+    public static bool EditorMode = OS.IsDebugBuild();
     private static void SetGodotConfig(ref IConfig? config, bool isDebug = false)
     {
         config ??= isDebug ? GodotConfig.DebugInProcessConfig : GodotConfig.DefaultConfig;
-        if (!config.Options.HasFlag(ConfigOptions.DisableOptimizationsValidator))
-        {
-            config = config.WithOptions(ConfigOptions.DisableOptimizationsValidator);
-        }
-
+        // if (!config.Options.HasFlag(ConfigOptions.DisableOptimizationsValidator))
+        // {
+        //     config = config.WithOptions(ConfigOptions.DisableOptimizationsValidator);
+        // }
     }
     private static void Callable(this Action<Summary, string>? onCallback, Summary[] summaries)
     {
@@ -51,7 +50,4 @@ public static partial class GodotBenchmarkRunner
         }
         logger.ClearLog();
     }
-
-    
-
 }

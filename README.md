@@ -41,18 +41,39 @@ For Package Reference:
 ```csharp
 using Godot;
 using System.Linq;
-using BenchmarkDotNet.Analysers;
-using BenchmarkDotNet.Configs;
-using BenchmarkDotNet.Godot.Exporters;
-using BenchmarkDotNet.Loggers;
-using BenchmarkDotNet.Running;
-using GodotTask.Tasks;
+using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Godot.Attributes.Jobs;
+using BenchmarkDotNet.Godot.Running;
+using BenchmarkDotNet.Order;
+
 public partial class BenchmarkRun : Node
 {
 
-    public override async void _Ready()
+    public override void _Ready()
     {
+        GodotBenchmarkRunner.RunWithBBCodeThread<BenchmarkTest>();
+    }
+}
 
+[Orderer(SummaryOrderPolicy.FastestToSlowest)]
+[MemoryDiagnoser, GodotSimpleJob]
+public  class BenchmarkTest
+{
+    [Params(1000, 10000)]
+    public int N;
+
+    private int[] data;
+
+    [GlobalSetup]
+    public void Setup()
+    {
+        data = new int[N];
+    }
+
+    [Benchmark]
+    public int Sum()
+    {
+        return data.Sum();
     }
 }
 ```
