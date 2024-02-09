@@ -92,7 +92,17 @@ public abstract class DebugConfig : IConfig
     /// Gets the loggers for the configuration.
     /// </summary>
     /// <returns>The loggers for the configuration.</returns>
-    public IEnumerable<ILogger> GetLoggers() => new[] { GodotLogger.Default, };
+    public IEnumerable<ILogger> GetLoggers()
+    {
+        if (OS.IsDebugBuild())
+        {
+            yield return GodotLogger.Default;
+        }
+        else
+        {
+            yield return ConsoleLogger.Default;
+        }
+    }
 
     /// <summary>
     /// Gets the diagnosers for the configuration.

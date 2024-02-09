@@ -12,7 +12,8 @@ namespace BenchmarkDotNet.Godot.Running;
 
 public static partial class GodotBenchmarkRunner
 {
-    public static bool EditorMode = OS.IsDebugBuild();
+    public static readonly  bool               DebugMode = OS.IsDebugBuild();
+    private static readonly AccumulationLogger Logger    = new AccumulationLogger();
     private static void SetGodotConfig(ref IConfig? config, bool isDebug = false)
     {
         config ??= isDebug ? GodotConfig.DebugInProcessConfig : GodotConfig.DefaultConfig;
@@ -21,16 +22,16 @@ public static partial class GodotBenchmarkRunner
         //     config = config.WithOptions(ConfigOptions.DisableOptimizationsValidator);
         // }
     }
-    private static void Callable(this Action<Summary, string>? onCallback, Summary[] summaries)
+    private static void Callable(Action<Summary, string>? onCallback, Summary[] summaries)
     {
 
-        var logger = new AccumulationLogger();
+        var logger = Logger;
         foreach (var summary in summaries)
         {
             BBCodeExporter.Default.ExportToLog(summary, logger);
             var log = logger.GetLog();
             onCallback?.Invoke(summary, log);
-            if (EditorMode)
+            if (DebugMode)
             {
                 GD.PrintRich(log);
             }
@@ -38,13 +39,13 @@ public static partial class GodotBenchmarkRunner
             logger.ClearLog();
         }
     }
-    private static void Callable(this Action<string>? onCallback, Summary summary)
+    private static void Callable(Action<string>? onCallback, Summary summary)
     {
-        var logger = new AccumulationLogger();
+        var logger = Logger;
         BBCodeExporter.Default.ExportToLog(summary, logger);
-        var log = logger.GetLog();
+        var log = Logger.GetLog();
         onCallback?.Invoke(log);
-        if (EditorMode)
+        if (DebugMode)
         {
             GD.PrintRich(log);
         }

@@ -56,7 +56,14 @@ public class DefaultConfig : IConfig
     /// <returns>The loggers for the benchmark.</returns>
     public IEnumerable<ILogger> GetLoggers()
     {
-        yield return GodotLogger.Default;
+        if (OS.IsDebugBuild())
+        {
+            yield return GodotLogger.Default;
+        }
+        else
+        {
+            yield return ConsoleLogger.Default;
+        }
     }
 
     /// <summary>

@@ -21,8 +21,7 @@ public static partial class GodotBenchmarkRunner
     public static Summary RunWithBBCode<T>(IConfig? config = null, string[]? args = null, Action<string>? onCallback = null, bool isDebug = false)
     {
         var summary = Run<T>(config, args, isDebug);
-        onCallback ??= _ => { };
-        onCallback.Callable(summary);
+        Callable(onCallback, summary);
         return summary;
     }
 
@@ -38,8 +37,7 @@ public static partial class GodotBenchmarkRunner
     public static Summary RunWithBBCode(Type type, IConfig? config = null, string[]? args = null, Action<string>? onCallback = null, bool isDebug = false)
     {
         var summary = Run(type, config, args, isDebug);
-        onCallback ??= _ => { };
-        onCallback.Callable(summary);
+        Callable(onCallback, summary);
         return summary;
     }
 
@@ -55,8 +53,7 @@ public static partial class GodotBenchmarkRunner
     public static Summary[] RunWithBBCode(Type[] types, IConfig? config = null, string[]? args = null, Action<Summary, string>? onCallback = null, bool isDebug = false)
     {
         var summaries = GodotBenchmarkRunner.Run(types, config, args, isDebug);
-        onCallback ??= (_, _) => { };
-        onCallback.Callable(summaries);
+        Callable(onCallback, summaries);
         return summaries;
     }
 
@@ -72,8 +69,8 @@ public static partial class GodotBenchmarkRunner
     public static Summary RunWithBBCode(Type type, MethodInfo[] methods, IConfig? config = null, Action<string>? onCallback = null, bool isDebug = false)
     {
         var summary = Run(type, methods, config, isDebug);
-        onCallback ??= _ => { };
-        onCallback.Callable(summary);
+    
+        Callable(onCallback,summary);
         return summary;
     }
     /// <summary>
@@ -89,8 +86,7 @@ public static partial class GodotBenchmarkRunner
     {
 
         var summaries = Run(assembly, config, args, isDebug);
-        onCallback ??= (_, _) => { };
-        onCallback.Callable(summaries);
+        Callable(onCallback, summaries);
         return summaries;
     }
 }
