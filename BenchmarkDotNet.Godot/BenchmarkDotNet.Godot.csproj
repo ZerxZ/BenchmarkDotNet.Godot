@@ -4,7 +4,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <TargetFrameworks>net8.0;net6.0;net7.0</TargetFrameworks>
-        <Version>0.0.5</Version>
+        <Version>0.0.7</Version>
         <Title>BenchmarkDotNet.Godot</Title>
         <Authors>Zerxz</Authors>
         <Description>BenchmarkDotNet.Godot allows developers to easily conduct performance testing and benchmarking within the Godot engine, enabling them to assess the efficiency of their code and identify potential performance bottlenecks.</Description>

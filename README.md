@@ -39,10 +39,11 @@ For Package Reference:
 # Basic API usage
 
 ```csharp
+using System.Collections.Generic;
 using Godot;
-using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Godot.Attributes.Jobs;
+using BenchmarkDotNet.Godot.Benchmark;
 using BenchmarkDotNet.Godot.Running;
 using BenchmarkDotNet.Order;
 
@@ -57,23 +58,31 @@ public partial class BenchmarkRun : Node
 
 [Orderer(SummaryOrderPolicy.FastestToSlowest)]
 [MemoryDiagnoser, GodotSimpleJob]
-public  class BenchmarkTest
+public class BenchmarkTest : GodotBenchmark
 {
-    [Params(1000, 10000)]
-    public int N;
 
-    private int[] data;
-
-    [GlobalSetup]
-    public void Setup()
+    public List<Node> NodeList;
+    public override void IterationSetup()
     {
-        data = new int[N];
+        NodeList = new List<Node>();
     }
-
     [Benchmark]
-    public int Sum()
+    public void TestNode()
     {
-        return data.Sum();
+        SyncCallback(root =>
+        {
+            for (int i = 0; i < 1000; i++)
+            {
+                var node = new Node();
+                NodeList.Add(node);
+                root.AddChild(node);
+            }
+            foreach (var node in NodeList)
+            {
+                node.QueueFree();
+            }
+            NodeList.Clear();
+        });
     }
 }
 ```
@@ -81,7 +90,7 @@ public  class BenchmarkTest
 # Api
 
 | BenchmarkDotNet Type | BenchmarkDotNet.Godot Type |
-| -------------------- | -------------------------- |
+|----------------------|----------------------------|
 | `DryJob`             | `GodotDryJob`              |
 | `SimpleJob`          | `GodotSimpleJob`           |
 | `ShortRunJob`        | `GodotShortRunJob`         |
