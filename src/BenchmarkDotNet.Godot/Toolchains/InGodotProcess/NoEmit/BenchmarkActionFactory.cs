@@ -6,8 +6,26 @@ using GodotTask.Tasks;
 
 namespace BenchmarkDotNet.Godot.Toolchains.InGodotProcess.NoEmit;
 
+public delegate BenchmarkAction BenchmarkActionFactoryDelegate(object instance, MethodInfo method, int unrollFactor);
+
+public delegate BenchmarkAction BenchmarkActionFactoryTypeDelegate(Func<Type, object, MethodInfo, int, BenchmarkAction> create, Type argType, object instance, MethodInfo method, int unrollFactor);
+
 public static partial class BenchmarkActionFactory
 {
+    private static Dictionary<Type, BenchmarkActionFactoryDelegate>     benchmarkActionFactoryDelegates     = new Dictionary<Type, BenchmarkActionFactoryDelegate>();
+    private static Dictionary<Type, BenchmarkActionFactoryTypeDelegate> benchmarkActionFactoryTypeDelegates = new Dictionary<Type, BenchmarkActionFactoryTypeDelegate>();
+    public static void RegisterBenchmarkActionFactoryDelegate<T>(BenchmarkActionFactoryDelegate factoryDelegate)
+    {
+        RegisterBenchmarkActionFactoryDelegate(typeof(T), factoryDelegate);
+    }
+    public static void RegisterBenchmarkActionFactoryDelegate(Type type, BenchmarkActionFactoryDelegate factoryDelegate)
+    {
+        benchmarkActionFactoryDelegates[type] = factoryDelegate;
+    }
+    public static void RegisterBenchmarkActionFactoryTypeDelegate(Type type, BenchmarkActionFactoryTypeDelegate factoryDelegate)
+    {
+        benchmarkActionFactoryTypeDelegates[type] = factoryDelegate;
+    }
     internal static bool HasAttribute<T>(this MemberInfo? memberInfo) where T : Attribute =>
         memberInfo.ResolveAttribute<T>() != null;
     internal static T? ResolveAttribute<T>(this MemberInfo? memberInfo) where T : Attribute =>
@@ -25,24 +43,24 @@ public static partial class BenchmarkActionFactory
     {
         PrepareInstanceAndResultType(instance, targetMethod, fallbackIdleSignature, out var resultInstance, out var resultType);
 
+        if (benchmarkActionFactoryDelegates.TryGetValue(resultType, out var factoryDelegate))
+        {
+            return factoryDelegate(resultInstance, targetMethod, unrollFactor);
+        }
         if (resultType == typeof(void))
             return new BenchmarkActionVoid(resultInstance, targetMethod, unrollFactor);
 
         if (resultType == typeof(Task))
             return new BenchmarkActionTask(resultInstance, targetMethod, unrollFactor);
-        if (resultType == typeof(GDTask))
-            return new BenchmarkActionGDTask(resultInstance, targetMethod, unrollFactor);
 
         if (resultType.GetTypeInfo().IsGenericType)
         {
             var genericType = resultType.GetGenericTypeDefinition();
             var argType     = resultType.GenericTypeArguments[0];
-            if (typeof(GDTask<>) == genericType)
-                return Create(
-                    typeof(BenchmarkActionGDTask<>).MakeGenericType(argType),
-                    resultInstance,
-                    targetMethod,
-                    unrollFactor);
+            if (benchmarkActionFactoryTypeDelegates.TryGetValue(genericType, out var factoryTypeDelegate))
+            {
+                return factoryTypeDelegate(Create, argType, resultInstance, targetMethod, unrollFactor);
+            }
             if (typeof(Task<>) == genericType)
                 return Create(
                     typeof(BenchmarkActionTask<>).MakeGenericType(argType),

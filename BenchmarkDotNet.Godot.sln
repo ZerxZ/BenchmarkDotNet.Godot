@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BenchmarkDotNet.Godot", "sr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{24155EE2-32F6-491D-8E6E-47C4752BAC4C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BenchmarkDotNet.Godot.GDTask", "src\BenchmarkDotNet.Godot.GDTask\BenchmarkDotNet.Godot.GDTask.csproj", "{3BF707D7-EF75-4F82-BD63-D71439E06A0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,8 +16,13 @@ Global
 		{8A181B58-B18D-4030-9F42-282170771B9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A181B58-B18D-4030-9F42-282170771B9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A181B58-B18D-4030-9F42-282170771B9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BF707D7-EF75-4F82-BD63-D71439E06A0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BF707D7-EF75-4F82-BD63-D71439E06A0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BF707D7-EF75-4F82-BD63-D71439E06A0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BF707D7-EF75-4F82-BD63-D71439E06A0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8A181B58-B18D-4030-9F42-282170771B9F} = {24155EE2-32F6-491D-8E6E-47C4752BAC4C}
+		{3BF707D7-EF75-4F82-BD63-D71439E06A0B} = {24155EE2-32F6-491D-8E6E-47C4752BAC4C}
 	EndGlobalSection
 EndGlobal

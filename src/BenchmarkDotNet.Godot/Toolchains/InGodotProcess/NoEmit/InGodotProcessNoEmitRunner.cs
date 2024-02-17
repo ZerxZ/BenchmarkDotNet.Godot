@@ -93,9 +93,9 @@ public class InGodotProcessNoEmitRunner
         }
     }
 
-    private static class Runnable
+    public static class Runnable
     {
-        static Type nodeType = typeof(Node);
+        public static event Action<object?> OnCreateInstance;
         public static void RunCore(IHost host, BenchmarkCase benchmarkCase)
         {
             var target       = benchmarkCase.Descriptor;
@@ -104,11 +104,11 @@ public class InGodotProcessNoEmitRunner
             var type         = benchmarkCase.Descriptor.Type;
             // DONTTOUCH: these should be allocated together
             var instance = Activator.CreateInstance(type);
-            if (type.IsSubclassOf(nodeType))
+            if (instance is Node node)
             {
-                var node = (Node)instance!;
                 GodotHelper.SynchronizationContext(node, n => GodotHelper.Root.AddChild(n));
             }
+            OnCreateInstance?.Invoke(instance);
             var workloadAction         = BenchmarkActionFactory.CreateWorkload(target, instance, unrollFactor);
             var overheadAction         = BenchmarkActionFactory.CreateOverhead(target, instance, unrollFactor);
             var globalSetupAction      = BenchmarkActionFactory.CreateGlobalSetup(target, instance);
