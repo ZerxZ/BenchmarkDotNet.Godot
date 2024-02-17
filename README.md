@@ -1,9 +1,12 @@
 # BenchmarkDotNet.Godot
-![NuGet Version](https://img.shields.io/nuget/v/BenchmarkDotNetGodot?label=BenchmarkDotNetGodot)
+[![NuGet Version](https://img.shields.io/nuget/v/BenchmarkDotNetGodot?label=BenchmarkDotNetGodot) ](https://www.nuget.org/packages/BenchmarkDotNetGodot)
 ![NuGet Downloads](https://img.shields.io/nuget/dt/BenchmarkDotNetGodot)
 
-![NuGet Version](https://img.shields.io/nuget/v/BenchmarkDotNetGodot.GDTask?label=BenchmarkDotNetGodot.GDTask) 
+[![NuGet Version](https://img.shields.io/nuget/v/BenchmarkDotNetGodot.GDTask?label=BenchmarkDotNetGodot.GDTask) ](https://www.nuget.org/packages/BenchmarkDotNetGodot.GDTask)
 ![NuGet Downloads](https://img.shields.io/nuget/dt/BenchmarkDotNetGodot.GDtask)
+
+[![Stars](https://img.shields.io/github/stars/Zerxz/BenchmarkDotNet.Godot?color=brightgreen)](https://github.com/Zerxz/BenchmarkDotNet.Godot/stargazers)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Zerxz/BenchmarkDotNet.Godot/blob/master/LICENSE)
 
 BenchmarkDotNet.Godot allows developers to easily conduct performance testing and benchmarking within the Godot engine,
 enabling them to assess the efficiency of their code and identify potential performance bottlenecks.
@@ -18,14 +21,14 @@ enabling them to assess the efficiency of their code and identify potential perf
 
 For .Net CLI
 
-```
+```****
 dotnet add package BenchmarkDotNetGodot
 dotnet add package BenchmarkDotNet
 dotnet add package GDTask
 ```
 
 For Package Manager Console:
-
+****
 ```
 NuGet\Install-Package BenchmarkDotNetGodot
 NuGet\Install-Package BenchmarkDotNet

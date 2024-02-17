@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Godot.Attributes;
 using BenchmarkDotNet.Reports;
 using BenchmarkDotNet.Running;
 
@@ -10,6 +11,27 @@ namespace BenchmarkDotNet.Godot.Running;
 /// </summary>
 public partial class GodotBenchmarkRunner
 {
+    private static bool _initialized;
+    private static void RegisterBenchmarkActionFactoryDelegates()
+    {
+        if (_initialized)
+        {
+            return;
+        }
+        var types = Assembly.GetExecutingAssembly().GetTypes()
+            .Where(t => t.GetCustomAttributes(typeof(RegisterBenchmarkActionFactoryAttribute), true).Length > 0);
+        foreach (var type in types)
+        {
+            foreach (var method in  type.GetMethods(BindingFlags.Static| BindingFlags.Public))
+            {
+                if (method.GetCustomAttribute<RegisterBenchmarkActionFactoryAttribute>() != null)
+                {
+                    method.Invoke(null, null);
+                }
+            }
+        }
+        _initialized = true;
+    }
     /// <summary>
     /// Runs a benchmark for a specific type.
     /// </summary>
@@ -20,6 +42,7 @@ public partial class GodotBenchmarkRunner
     /// <returns>A summary of the benchmark results.</returns>
     public static Summary Run<T>(IConfig? config = null, string[]? args = null, bool isDebug = false)
     {
+        
         SetGodotConfig(ref config, isDebug);
         return BenchmarkRunner.Run<T>(config, args);
     }
@@ -34,6 +57,7 @@ public partial class GodotBenchmarkRunner
     /// <returns>A summary of the benchmark results.</returns>
     public static Summary Run(Type type, IConfig? config = null, string[]? args = null, bool isDebug = false)
     {
+        
         SetGodotConfig(ref config, isDebug);
         return BenchmarkRunner.Run(type, config, args);
     }
@@ -48,6 +72,7 @@ public partial class GodotBenchmarkRunner
     /// <returns>An array of summaries of the benchmark results.</returns>
     public static Summary[] Run(Type[] types, IConfig? config = null, string[]? args = null, bool isDebug = false)
     {
+        
         SetGodotConfig(ref config, isDebug);
         return BenchmarkRunner.Run(types, config, args);
     }
@@ -62,6 +87,7 @@ public partial class GodotBenchmarkRunner
     /// <returns>A summary of the benchmark results.</returns>
     public static Summary Run(Type type, MethodInfo[] methods, IConfig? config = null, bool isDebug = false)
     {
+        
         SetGodotConfig(ref config, isDebug);
         return BenchmarkRunner.Run(type, methods, config);
     }
@@ -76,6 +102,7 @@ public partial class GodotBenchmarkRunner
     /// <returns>An array of summaries of the benchmark results.</returns>
     public static Summary[] Run(Assembly assembly, IConfig? config = null, string[]? args = null, bool isDebug = false)
     {
+        
         SetGodotConfig(ref config, isDebug);
         return BenchmarkRunner.Run(assembly, config, args);
     }

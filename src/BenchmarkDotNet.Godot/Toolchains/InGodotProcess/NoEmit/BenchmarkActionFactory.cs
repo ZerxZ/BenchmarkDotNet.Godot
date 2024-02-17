@@ -12,8 +12,8 @@ public delegate BenchmarkAction BenchmarkActionFactoryTypeDelegate(Func<Type, ob
 
 public static partial class BenchmarkActionFactory
 {
-    private static Dictionary<Type, BenchmarkActionFactoryDelegate>     benchmarkActionFactoryDelegates     = new Dictionary<Type, BenchmarkActionFactoryDelegate>();
-    private static Dictionary<Type, BenchmarkActionFactoryTypeDelegate> benchmarkActionFactoryTypeDelegates = new Dictionary<Type, BenchmarkActionFactoryTypeDelegate>();
+    public static Dictionary<Type, BenchmarkActionFactoryDelegate>     benchmarkActionFactoryDelegates     = new Dictionary<Type, BenchmarkActionFactoryDelegate>();
+    public static Dictionary<Type, BenchmarkActionFactoryTypeDelegate> benchmarkActionFactoryTypeDelegates = new Dictionary<Type, BenchmarkActionFactoryTypeDelegate>();
     public static void RegisterBenchmarkActionFactoryDelegate<T>(BenchmarkActionFactoryDelegate factoryDelegate)
     {
         RegisterBenchmarkActionFactoryDelegate(typeof(T), factoryDelegate);

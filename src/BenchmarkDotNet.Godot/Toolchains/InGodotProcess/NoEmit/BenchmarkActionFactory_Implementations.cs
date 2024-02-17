@@ -18,7 +18,6 @@ public static partial class BenchmarkActionFactory
         {
             if (attribute is ISynchronizationContext synchronizationContext)
             {
-                GD.Print(synchronizationContext.GetType().FullName);
                 return synchronizationContext?.SynchronizationContext ?? false;
             }
         }
@@ -31,21 +30,25 @@ public static partial class BenchmarkActionFactory
         private readonly Action unrolledCallback;
         public           bool   SynchronizationContext;
         public readonly  Action originCallback;
-        public           bool   GlobalCleanup  { get; set; }
-        public           bool   isNode         { get; set; }
-        public           void   SyncCallback() =>
-            
+        public           bool   GlobalCleanup { get; set; }
+        public           bool   isNode        { get; set; } = false;
+        public void SyncCallback() =>
             GodotHelper.SynchronizationContext(originCallback);
-        private          object Instance       { get; set; }
+        private Node Instance { get; set; }
         public BenchmarkActionVoid(object instance, MethodInfo method, int unrollFactor)
         {
-            Instance = instance;
+
             originCallback = CreateWorkloadOrOverhead<Action>(instance, method, OverheadStatic, OverheadInstance);
             SynchronizationContext = method?.GetSynchronizationContext() ?? false;
-            callback = SynchronizationContext ?SyncCallback  :originCallback ;
+            callback = SynchronizationContext ? SyncCallback : originCallback;
             GlobalCleanup = method.HasAttribute<GlobalCleanupAttribute>();
-            isNode = instance is Node;
-            InvokeSingle = callback;
+            if (instance is Node node)
+            {
+                isNode = true;
+                Instance = node;
+            }
+
+            InvokeSingle = OnInvokeSingle;
 
             unrolledCallback = Unroll(callback, unrollFactor);
             InvokeUnroll = WorkloadActionUnroll;

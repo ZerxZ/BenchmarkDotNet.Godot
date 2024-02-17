@@ -1,23 +1,27 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
+using BenchmarkDotNet.Godot.Attributes;
 using BenchmarkDotNet.Portability;
 using GodotTask.Tasks;
 using BenchmarkDotNet.Toolchains.InProcess.NoEmit;
+using Godot;
 using BenchmarkActionFactory = BenchmarkDotNet.Godot.Toolchains.InGodotProcess.NoEmit.BenchmarkActionFactory;
 
 namespace BenchmarkDotNet.Godot.GDTask.Toolchains.InGodotProcess.NoEmit;
-
-public static partial class BenchmarkActionFactoryGDtask
+[RegisterBenchmarkActionFactory]
+public   class BenchmarkActionFactoryGDtask
 {
-    static BenchmarkActionFactoryGDtask()
+    
+    [RegisterBenchmarkActionFactory]
+    public static void RegisterBenchmarkActionFactoryDelegates()
     {
-
+        GD.Print("BenchmarkActionFactoryGDtask initialized");
         BenchmarkActionFactory.RegisterBenchmarkActionFactoryDelegate<GodotTask.Tasks.GDTask>(BenchmarkActionGDTaskFactory);
         BenchmarkActionFactory.RegisterBenchmarkActionFactoryTypeDelegate(typeof(GDTask<>), BenchmarkActionGDTaskGenericFactory);
     }
     private static BenchmarkAction BenchmarkActionGDTaskGenericFactory(Func<Type, object, MethodInfo, int, BenchmarkAction> create, Type argType, object instance, MethodInfo method, int unrollfactor)
     {
-        return create(typeof(GDTask<>).MakeGenericType(argType), instance, method, unrollfactor);
+        return create(typeof(BenchmarkActionGDTask<>).MakeGenericType(argType), instance, method, unrollfactor);
     }
     private static BenchmarkAction BenchmarkActionGDTaskFactory(object instance, MethodInfo method, int unrollFactor)
     {
