@@ -28,6 +28,7 @@ public class GodotLogger : ILogger
         if (_sb.Length > 0)
         {
             Flush();
+            return;
         }
         GD.Print();
     }
@@ -40,11 +41,14 @@ public class GodotLogger : ILogger
     /// <param name="text">The text of the log message.</param>
     public void WriteLine(LogKind logKind, string text)
     {
+        var message = string.Empty;
         if (_sb.Length > 0)
         {
-            Flush();
+            message = _sb.ToString();
+            _sb.Clear();
         }
-        GD.PrintRich($"[color={GetColor(logKind)}]{text}[/color]");
+        message += $"[color={GetColor(logKind)}]{text}[/color]";
+        GD.PrintRich(message);
     }
 
     /// <summary>

@@ -40,50 +40,52 @@ For Package Reference:
 # Basic API usage
 
 ```csharp
-using System.Collections.Generic;
 using Godot;
-using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Godot.Attributes.Jobs;
-using BenchmarkDotNet.Godot.Benchmark;
 using BenchmarkDotNet.Godot.Running;
-using BenchmarkDotNet.Order;
 
 public partial class BenchmarkRun : Node
 {
 
     public override void _Ready()
     {
-        GodotBenchmarkRunner.RunWithBBCodeThread<BenchmarkTest>();
+        GodotBenchmarkRunner.RunWithBBCodeAsync<BenchmarkTest>(isDebug:true);
     }
 }
+------
+using Godot;
+using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Godot.Attributes;
+using BenchmarkDotNet.Godot.Attributes.Jobs;
+using BenchmarkDotNet.Order;
 
 [Orderer(SummaryOrderPolicy.FastestToSlowest)]
 [MemoryDiagnoser, GodotSimpleJob]
-public class BenchmarkTest : GodotBenchmark
+public partial class BenchmarkTest : Node
 {
-
-    public List<Node> NodeList;
-    public override void IterationSetup()
-    {
-        NodeList = new List<Node>();
-    }
-    [Benchmark]
+    [GodotBenchmark]
     public void TestNode()
     {
-        SyncCallback(root =>
+        var Parent = new Node();
+        AddChild(Parent);
+        for (int i = 0; i < 1000; i++)
         {
-            for (int i = 0; i < 1000; i++)
-            {
-                var node = new Node();
-                NodeList.Add(node);
-                root.AddChild(node);
-            }
-            foreach (var node in NodeList)
-            {
-                node.QueueFree();
-            }
-            NodeList.Clear();
-        });
+            var node = new Node();
+            Parent.AddChild(node);
+        }
+        Parent.QueueFree();
+
+    }
+    [Benchmark]
+    public void TestNodeCallDeferred()
+    {
+        var Parent = new Node();
+        CallDeferred(MethodName.AddChild, Parent);
+        for (int i = 0; i < 1000; i++)
+        {
+            var node = new Node();
+            Parent.CallDeferred(MethodName.AddChild, node);
+        }
+        Parent.CallDeferred(Godot.Node.MethodName.QueueFree);
     }
 }
 ```
